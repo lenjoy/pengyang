@@ -1,0 +1,78 @@
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>test</title>
+    <link rel="stylesheet" type="text/css" href="web_input_method/web-input-method.css">
+    <style type="text/css">
+    body {
+        font-family: 'Microsoft Yahei';
+        font-size: 16px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="debug"></div>
+    <div id="result"></div>
+
+    <script type="text/javascript" src="web_input_method/engine.js"></script>
+    <script type="text/javascript">
+
+function outputResult(expectedWord, actualWord, remainInput) {
+    var node = document.createElement('DIV');
+    var htmlString = '<span>' + expectedWord + '</span> -vs- <span>' + actualWord + ' ~(' + remainInput + ')</span>';
+    node.innerHTML = htmlString;
+    if (expectedWord == actualWord) {
+        node.style.background = 'lightgreen';
+    } else {
+        node.style.background = 'red';
+    }
+    return node;
+}
+
+
+var t = new Trie('_');
+t.insert('zhang', 0);
+t.insert('jintian', 0);
+t.insert('zhan', 0);
+
+console.log(t);
+
+var debugNode = document.getElementById('debug')
+
+// test Trie tree insert()
+var node = document.createElement('DIV');
+node.innerHTML = 'The tree is<br/>' + t.print(0);
+debugNode.appendChild(node);
+debugNode.appendChild(document.createElement('BR'));
+
+// test search
+var arr = [
+    // expected word, input word
+    'zhan', 'zha',
+    'zhang', 'zhang',
+    'jintian', 'jintian',
+    'jintian', 'jin',
+    'zhang', 'zhangblabla'];
+
+for (var i = 0; i < arr.length; i+=2) {
+    var expectedWord = arr[i];
+    var inputWord = arr[i+1];
+
+    var segs = t.searchAndUpdate(inputWord);
+    var matchedWord = segs[0];
+    var remainInput = segs[1];
+
+    var node = outputResult(expectedWord, matchedWord, remainInput);
+    debugNode.appendChild(node);
+    debugNode.appendChild(document.createElement('BR'));
+}
+
+document.getElementById('result').innerHTML = 'DONE';
+
+    </script>
+
+</body>
+</html>
