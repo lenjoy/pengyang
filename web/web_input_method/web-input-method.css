@@ -53,7 +53,7 @@
 .virtual_keyboard {
     background:rgba(229,230,232,1);
     position: fixed;
-    bottom: 10px;
+    bottom: 8px;
     width: 90%;
     height: 24%;
     display: none;
@@ -65,6 +65,7 @@
 .virtual_keyboard p input {
     margin-left: 1%;
     margin-right: 1%;
+    margin-bottom: 3%;
     outline: none;
     background:rgba(252,252,252,1);
     border: 0;
