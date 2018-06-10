@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 
     <title>网页版拼音输入法</title>
     <link rel="stylesheet" type="text/css" href="web_input_method/web-input-method.css">
@@ -11,6 +11,7 @@
     body {
         font-family: "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
         font-size: 16px;
+        position:relative;
     }
     * {
         -webkit-box-sizing: border-box;
@@ -20,9 +21,9 @@
     h1 {
         background-color: #5f5f5f;
         color: white;
-        padding: 2px 8px;
+        padding: 0px 3px;
         border-radius: 5px;
-        font-size: 22px;
+        font-size: 19px;
         line-height: 1.5;
         text-shadow: 1px 1px 1px grey;
         width: 100%;
@@ -30,14 +31,14 @@
     }
     h2 {
         border: 0 none;
-        font-size: 16px;
+        font-size: 13px;
         color: #777;
     }
     .editor {
         width: 100%;
-        height: 260px;
+        height: 220px;
         margin: 20px auto;
-        border: 3px;
+        border: 2px;
     }
     .editor textarea {
         font-family: consolas,'courier new',monospace;
@@ -54,7 +55,7 @@
     }
     .note {
         border:0 none;
-        font-size:14px;
+        font-size: 13px;
         color: #777;
     }
     </style>
@@ -65,28 +66,65 @@
     <h2><i>温州话会讲亦会写，会写就会传落闿</i></h2>
 
     <div class="note">
-        请用电脑桌面浏览器打开，将输入法设置成默认英语状态，目前版本暂不支持手机浏览器，稍后会继续开发。
+        电脑用户请关闭输入法。手机用户打开<input type="button" value="虚键盘" class="show_keyboard">
     </div>
 
-    <div class="editor">
+    <div id="editor_id" class="editor">
 
         <textarea autocomplete="off" id="textarea_id" wrap="logical" spellcheck="false"
                   class="editbox" placeholder="请在这里输入"></textarea>
-
-        <div id="web_input_method" class="web-input-method">
-            <div class="pinyin"></div>
-            <div class="result">
-                <ol></ol>
-                <div class="page-up-down">
-                    <span class="page-up">&#9650;</span>
-                    <span class="page-down">&#9660;</span>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <div id="debug"></div>
+
+    <div id="web_input_method" class="web-input-method">
+        <div class="pinyin"></div>
+        <div class="result">
+            <ol></ol>
+            <div class="page-up-down">
+                <span class="page-up">&#9650;</span>
+                <span class="page-down">&#9660;</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="virtual_keyboard">
+        <p>
+            <input type="button" value="Q">
+            <input type="button" value="W">
+            <input type="button" value="E">
+            <input type="button" value="R">
+            <input type="button" value="T">
+            <input type="button" value="Y">
+            <input type="button" value="U">
+            <input type="button" value="I">
+            <input type="button" value="O">
+            <input type="button" value="P">
+        </p>
+        <p>
+            <input type="button" style="margin-left:5.5%;" value="A">
+            <input type="button" value="S">
+            <input type="button" value="D">
+            <input type="button" value="F">
+            <input type="button" value="G">
+            <input type="button" value="H">
+            <input type="button" value="J">
+            <input type="button" value="K">
+            <input type="button" value="L">
+        </p>
+        <p>
+            <input type="button" style="margin-left:10%;" value="Z">
+            <input type="button" value="X">
+            <input type="button" value="C">
+            <input type="button" value="V">
+            <input type="button" value="B">
+            <input type="button" value="N">
+            <input type="button" value="M">
+            <input type="button" value="<-" class="gray del">
+        </p>
+    </div>
+
 
     <div class="note">
 
@@ -121,7 +159,7 @@
     <b>g, k, gk</b> <br/>
     <b>g</b>: 觉着 gudgia 角 gu <br/>
     <b>k</b>: 打瞌睏 diekvkai 哭 ku <br/>
-    <b>gk</b>: 渠(他) gki 掼(扔) gka 岿(站)起坐落 gkicizulu <br/>
+    <b>gk</b>: 渠(他) gki 掼(扔) gka 岿(站)起坐落 gkiciszulu <br/>
 </p>
 
 <p>
@@ -145,7 +183,7 @@
 </p>
 
 <p>
-    其他<b>ue, io, u, v, ng, ea, ri</b> <br/>
+    其他<b>ue, io, u, v, ng, ea</b> <br/>
     <b>ue</b>: 暗 ue 婆 bpue <br/>
     <b>io</b>: 踹 qio 肿 jio <br/>
     <b>u</b>: 过 gu 古 gu <br/>
@@ -169,7 +207,7 @@
     <script type="text/javascript" src="web_input_method/engine.js"></script>
 
     <script type="text/javascript">
-        WebInputMethod.initAll('.editbox');
+        WebInputMethod.initAll();
     </script>
 
 </body>

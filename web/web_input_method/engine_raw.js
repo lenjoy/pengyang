@@ -128,7 +128,7 @@ var WebInputMethod =
     pageCount: 0,  // total page count
 
     /**
-     * init dictionary
+     * Init dictionary
      */
     initDict: function() {
         if (!pinyin_dict) {
@@ -136,17 +136,14 @@ var WebInputMethod =
         }
 
         this.trie = new Trie('_');
-            
         for (var pinyin in pinyin_dict) {
             this.trie.insert(pinyin, 0);
-//            console.log(pinyin);
-//            console.log(dict.py2hz[pinyin]);
         }
 
         // document.getElementById('debug').innerHTML = this.trie.print(0);
     },
     /**
-     * init dom events
+     * Init input method dom events
      */
     initDom: function() {
         var dom = document.querySelector('#web_input_method');
@@ -164,70 +161,98 @@ var WebInputMethod =
                     that.refreshPage();
                 }
             }
-        })
-        document.body.appendChild(dom);
+        });
     },
 
     /**
-     * init all
+     * Init keyboard related elements
      */
-    initAll: function(selector) {
+    initKeyboard: function() {
+        // the button to show or hide the virtual keyword
+        var showKeyboardButton = document.querySelector('.show_keyboard');
+        showKeyboardButton.addEventListener('click', function(){
+            var elem = document.querySelector('.virtual_keyboard');
+            if (elem.style.display == 'block') {
+                elem.style.display = 'none';
+            } else {
+                elem.style.display = 'block';
+            }
+        });
+
+        var that = this;
+        var input=document.querySelectorAll('.virtual_keyboard p input');
+        for (var i = 0; i < input.length; i++) {
+            input[i].addEventListener('click', function() {
+                var inputChar = this.value;
+                console.log(inputChar);
+                if (inputChar >= 'A' && inputChar <= 'Z') {
+                    // A-Z
+                    that.addChar(inputChar.toLowerCase());
+                } else if (inputChar == '<-' && that.pinyin) {
+                    // del
+                    that.delChar();
+                }
+            });
+        };
+    },
+
+    /**
+     * Init all
+     */
+    initAll: function() {
         this.initDict();
         this.initDom();
-        var obj = document.querySelectorAll(selector);
+        this.initKeyboard();
         this._target = document.querySelector('#web_input_method');
         this._pinyinTarget = document.querySelector('#web_input_method .pinyin');
         this._resultTarget = document.querySelector('#web_input_method .result ol');
         var that = this;
-        for (var i=0; i<obj.length; i++) {
-            obj[i].addEventListener('keydown', function(e) {
-                var keyCode = e.keyCode;
-                var preventDefault = false;
-                if (e.ctrlKey || e.metaKey) {
-                    console.log(keyCode);
-                } else if (keyCode >= 65 && keyCode <= 90) {
-                    // A-Z
-                    that.addChar(String.fromCharCode(keyCode+32), this);
-                    preventDefault = true;
-                }
-                else if (keyCode == 8 && that.pinyin) {
-                    // del
-                    that.delChar();
-                    preventDefault = true;
-                } else if (keyCode >= 48 && keyCode <= 57 && !e.shiftKey && that.pinyin) {
-                    // 1-9
-                    that.chooseCharacter(keyCode-48);
-                    preventDefault = true;
-                }
-                else if (keyCode == 32 && that.pinyin) {
-                    // space
-                    that.chooseCharacter(1);
-                    preventDefault = true;
-                }
-                else if (keyCode == 33 && that.pageCount > 0 && that.pageCurrent > 1) {
-                    // page-up
-                    that.pageCurrent--;
-                    that.refreshPage();
-                    preventDefault = true;
-                }
-                else if (keyCode == 34 && that.pageCount > 0 && that.pageCurrent < that.pageCount) {
-                    // page-down
-                    that.pageCurrent++;
-                    that.refreshPage();
-                    preventDefault = true;
-                }
+        var editbox = document.querySelector('#textarea_id');
+        this._input = editbox;
 
-                if (preventDefault) {
-                    e.preventDefault();
-                }
-            });
-            obj[i].addEventListener('focus', function() {
-                // hide input method if not in the input box
-                if (that._input !== this) {
-                    that.hide();
-                }
-            });
-        }
+        editbox.addEventListener('keydown', function(e) {
+            var keyCode = e.keyCode;
+            var preventDefault = false;
+            if (e.ctrlKey || e.metaKey) {
+                console.log(keyCode);
+            } else if (keyCode >= 65 && keyCode <= 90) {
+                // A-Z
+                that.addChar(String.fromCharCode(keyCode+32));
+                preventDefault = true;
+            } else if (keyCode == 8 && that.pinyin) {
+                // del
+                that.delChar();
+                preventDefault = true;
+            } else if (keyCode >= 48 && keyCode <= 57 && !e.shiftKey && that.pinyin) {
+                // 1-9
+                that.chooseCharacter(keyCode-48);
+                preventDefault = true;
+            } else if (keyCode == 32 && that.pinyin) {
+                // space
+                that.chooseCharacter(1);
+                preventDefault = true;
+            } else if (keyCode == 33 && that.pageCount > 0 && that.pageCurrent > 1) {
+                // page-up
+                that.pageCurrent--;
+                that.refreshPage();
+                preventDefault = true;
+            } else if (keyCode == 34 && that.pageCount > 0 && that.pageCurrent < that.pageCount) {
+                // page-down
+                that.pageCurrent++;
+                that.refreshPage();
+                preventDefault = true;
+            }
+
+            if (preventDefault) {
+                e.preventDefault();
+            }
+        });
+        editbox.addEventListener('focus', function() {
+            // hide input method if not in the input box
+            if (that._input !== this) {
+                that.hide();
+            }
+        });
     },
 
     /**
@@ -297,9 +322,9 @@ var WebInputMethod =
         this._target.querySelector('.page-down').style.opacity = this.pageCurrent < this.pageCount ? '1' : '.3';
         this._resultTarget.innerHTML = htmlArr.join('');
     },
-    addChar: function(ch, obj) {
+    addChar: function(ch) {
         if (this.pinyin.length == 0) {
-            this.show(obj);
+            this.show();
         }
         this.originalPinyin += ch;
         this.pinyin = this.originalPinyin;
@@ -315,11 +340,7 @@ var WebInputMethod =
         this.pinyin = this.originalPinyin;
         this.refreshBox();
     },
-    show: function(obj) {
-        var pos = obj.getBoundingClientRect();
-        this._target.style.left = pos.left + 'px';
-        this._target.style.top = pos.top + pos.height + document.body.scrollTop + 'px';
-        this._input = obj;
+    show: function() {
         this._target.style.display = 'block';
     },
     hide: function() {

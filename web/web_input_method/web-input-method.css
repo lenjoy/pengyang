@@ -1,5 +1,4 @@
 ﻿.web-input-method {
-    position: absolute;
     background: #FFF;
     border: solid 1px #a98567;
     font-family: 'Arial';
@@ -49,4 +48,61 @@
 }
 .web-input-method .page-up-down span.disable {
     opacity: .3;
+}
+
+.virtual_keyboard {
+    background:rgba(229,230,232,1);
+    position: fixed;
+    bottom: 10px;
+    width: 90%;
+    height: 24%;
+    display: none;
+    -webkit-transition:all 1s ease 0;
+}
+.virtual_keyboard p {
+    height: 22%;
+}
+.virtual_keyboard p input {
+    margin-left: 1%;
+    margin-right: 1%;
+    outline: none;
+    background:rgba(252,252,252,1);
+    border: 0;
+    width: 6.8%;
+    height: 90%;
+    border-radius: 0.3em;
+    box-shadow: 0 1px 1px gray;
+    font-weight: bolder;
+}
+.show_keyboard {
+    margin-top: 1%;
+    margin-left: 1%;
+    margin-right: 1%;
+    outline: none;
+    background: rgba(229,230,232,1);
+    border: 0;
+    font-family: "WenQuanYi Micro Hei";
+    font-size: 13px;
+    border-radius: 0.3em;
+    box-shadow: 0 1px 1px gray;
+    font-weight: bolder;
+}
+.show_keyboard:active {
+    background: rgba(0,142,255,1);
+    color:white;
+}
+
+.virtual_keyboard p input:active {
+    background: rgba(0,142,255,1);
+    color:white;
+}
+.virtual_keyboard p input.gray {
+    background: rgba(192,195,200,1);
+}
+.virtual_keyboard p input.gray:active {
+    background: gray;
+}
+.virtual_keyboard p input.del {
+    width: 11.5%;
+    margin-left: 3%;
 }
